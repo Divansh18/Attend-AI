@@ -19,3 +19,6 @@ data class FaceEnrollment(val staffId: Long)
 
 @Serializable
 data object StaffAttendance
+
+@Serializable
+data object FaceProofOfConcept

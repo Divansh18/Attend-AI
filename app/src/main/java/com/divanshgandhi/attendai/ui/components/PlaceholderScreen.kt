@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PlaceholderScreen(title: String, message: String, actionLabel: String, onAction: () -> Unit) {
+fun PlaceholderScreen(title: String, message: String, actionLabel: String, onAction: () -> Unit, extraContent: @Composable () -> Unit = {}) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(innerPadding).padding(24.dp),
@@ -22,6 +22,7 @@ fun PlaceholderScreen(title: String, message: String, actionLabel: String, onAct
             Text(title, style = MaterialTheme.typography.headlineMedium)
             Text(message, style = MaterialTheme.typography.bodyLarge)
             OutlinedButton(onClick = onAction) { Text(actionLabel) }
+            extraContent()
         }
     }
 }

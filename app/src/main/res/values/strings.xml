@@ -1,5 +1,21 @@
 <resources>
     <string name="app_name">AttendAI</string>
+    <string name="face_poc_title">Face recognition · Debug POC</string>
+    <string name="face_poc_explanation">Keep one face in view. Capture a reference, then compare another capture. Nothing is saved to disk.</string>
+    <string name="face_camera_permission">Camera access is required. If permission was denied, grant it below or in app settings.</string>
+    <string name="face_grant_permission">Grant camera access</string>
+    <string name="face_open_settings">Open app settings</string>
+    <string name="face_retry_camera">Retry camera</string>
+    <string name="face_capture_reference">Capture reference</string>
+    <string name="face_capture_compare">Capture and compare</string>
+    <string name="face_reference_ready">Reference embedding is held in memory.</string>
+    <string name="face_reference_missing">No reference captured yet.</string>
+    <string name="face_match">MATCH · provisional</string>
+    <string name="face_no_match">NO MATCH · provisional</string>
+    <string name="face_threshold_note">Upstream rule: angle &lt; 74.18°. This threshold is not calibrated for AttendAI. No liveness detection.</string>
+    <string name="face_aligned_crop">Aligned face used for inference</string>
+    <string name="face_processing_time">Detection + alignment + inference: %1$d ms</string>
+    <string name="face_clear_reference">Clear reference</string>
     <string name="sign_in_subtitle">Sign in to your account</string>
     <string name="admin">Admin</string>
     <string name="staff">Staff</string>
@@ -16,12 +32,10 @@
     <string name="invalid_credentials">Incorrect username or password.</string>
     <string name="staff_sign_in_unavailable">Staff sign-in will be available after staff setup.</string>
     <string name="admin_staff_list">Admin · Staff list</string>
-    <string name="staff_list_placeholder">You are signed in as Admin. Staff management will be available here.</string>
-    <string name="add_staff">Add staff</string>
-    <string name="staff_profile">Staff profile</string>
-    <string name="face_enrollment">Face enrollment</string>
+    <string name="add_staff">Add Staff</string>
+    <string name="staff_profile">Staff Profile</string>
+    <string name="face_enrollment">Face Enrollment</string>
     <string name="attendance">Attendance</string>
     <string name="back">Back</string>
     <string name="feature_coming_soon">This feature is not available yet.</string>
-    <string name="staff_feature_coming_soon">This feature is not available yet for staff record %1$d.</string>
 </resources>

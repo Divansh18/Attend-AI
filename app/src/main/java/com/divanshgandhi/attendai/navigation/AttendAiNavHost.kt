@@ -1,5 +1,6 @@
 package com.divanshgandhi.attendai.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -10,7 +11,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.divanshgandhi.attendai.ui.admin.addstaff.AddStaffScreen
+import com.divanshgandhi.attendai.ui.admin.addstaff.AddStaffViewModel
+import com.divanshgandhi.attendai.ui.admin.staffprofile.StaffProfileScreen
+import com.divanshgandhi.attendai.ui.admin.staffprofile.StaffProfileViewModel
+import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListViewModel
+import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentScreen
+import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentViewModel
 import com.divanshgandhi.attendai.R
+import com.divanshgandhi.attendai.BuildConfig
+import com.divanshgandhi.attendai.ui.facepoc.FacePocScreen
+import com.divanshgandhi.attendai.ui.facepoc.FacePocViewModel
 import com.divanshgandhi.attendai.model.UserSession
 import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListScreen
 import com.divanshgandhi.attendai.ui.components.PlaceholderScreen
@@ -46,33 +57,57 @@ fun AttendAiNavHost(
             }
             UserSession.Admin -> {
                 composable<AdminStaffList> {
-                    StaffListScreen(onSignOut = onSignOut)
+                    val vm: StaffListViewModel = viewModel(factory = viewModelFactory)
+                    val state by vm.state.collectAsStateWithLifecycle()
+                    StaffListScreen(state, onAdd = { navController.navigate(AddStaff) },
+                        onStaff = { navController.navigate(StaffProfile(it)) }, onRetry = vm::retry,
+                        onSignOut = onSignOut, onFacePoc = { navController.navigate(FaceProofOfConcept) })
+                }
+                if (BuildConfig.DEBUG) {
+                    composable<FaceProofOfConcept> {
+                        val faceViewModel: FacePocViewModel = viewModel(factory = viewModelFactory)
+                        val state by faceViewModel.state.collectAsStateWithLifecycle()
+                        FacePocScreen(
+                            state = state,
+                            onCapture = faceViewModel::capture,
+                            onReset = faceViewModel::reset,
+                            onBack = { navController.popBackStack() },
+                        )
+                    }
                 }
                 composable<AddStaff> {
-                    PlaceholderScreen(
-                        title = stringResource(R.string.add_staff),
-                        message = stringResource(R.string.feature_coming_soon),
-                        actionLabel = stringResource(R.string.back),
-                        onAction = { navController.popBackStack() },
-                    )
+                    val vm: AddStaffViewModel = viewModel(factory = viewModelFactory)
+                    val state by vm.state.collectAsStateWithLifecycle()
+                    LaunchedEffect(state.createdId) {
+                        state.createdId?.let { id ->
+                            navController.navigate(StaffProfile(id)) { popUpTo<AddStaff> { inclusive = true } }
+                        }
+                    }
+                    AddStaffScreen(state, vm::onNameChange, vm::onEmployeeIdChange, vm::submit) { navController.popBackStack() }
                 }
                 composable<StaffProfile> { entry ->
                     val route = entry.toRoute<StaffProfile>()
-                    PlaceholderScreen(
-                        title = stringResource(R.string.staff_profile),
-                        message = stringResource(R.string.staff_feature_coming_soon, route.staffId),
-                        actionLabel = stringResource(R.string.back),
-                        onAction = { navController.popBackStack() },
-                    )
+                    val vm: StaffProfileViewModel = viewModel(factory = viewModelFactory)
+                    val state by vm.state.collectAsStateWithLifecycle()
+                    val enrollmentSaved by entry.savedStateHandle.getStateFlow("enrollmentSaved", false).collectAsStateWithLifecycle()
+                    StaffProfileScreen(state, enrollmentSaved,
+                        onDismissConfirmation = { entry.savedStateHandle["enrollmentSaved"] = false },
+                        onEnroll = {
+                            entry.savedStateHandle["enrollmentSaved"] = false
+                            navController.navigate(FaceEnrollment(route.staffId))
+                        },
+                        onRetry = vm::retry, onBack = { navController.popBackStack() })
                 }
-                composable<FaceEnrollment> { entry ->
-                    val route = entry.toRoute<FaceEnrollment>()
-                    PlaceholderScreen(
-                        title = stringResource(R.string.face_enrollment),
-                        message = stringResource(R.string.staff_feature_coming_soon, route.staffId),
-                        actionLabel = stringResource(R.string.back),
-                        onAction = { navController.popBackStack() },
-                    )
+                composable<FaceEnrollment> {
+                    val vm: FaceEnrollmentViewModel = viewModel(factory = viewModelFactory)
+                    val state by vm.state.collectAsStateWithLifecycle()
+                    LaunchedEffect(state.saved) {
+                        if (state.saved) {
+                            navController.previousBackStackEntry?.savedStateHandle?.set("enrollmentSaved", true)
+                            navController.popBackStack()
+                        }
+                    }
+                    FaceEnrollmentScreen(state, vm::enroll, vm::retry) { navController.popBackStack() }
                 }
             }
             is UserSession.Staff -> composable<StaffAttendance> {

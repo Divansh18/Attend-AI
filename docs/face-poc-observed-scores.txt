@@ -1,0 +1,10 @@
+09-27 00:45:17.348 24388 24412 I AttendAI-FacePOC: same_photo_repeat_0 cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=238
+09-27 00:45:17.630 24388 24412 I AttendAI-FacePOC: same_photo_repeat_1 cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=233
+09-27 00:45:17.921 24388 24412 I AttendAI-FacePOC: same_photo_repeat_2 cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=241
+09-27 00:45:18.162 24388 24412 I AttendAI-FacePOC: same_person_independent_photo cosine=0.81476303 angle=35.436062 l2=0.60866570 match=true ms=220
+09-27 00:45:18.452 24388 24412 I AttendAI-FacePOC: different_person cosine=0.15870343 angle=80.868353 l2=1.29714808 match=false ms=214
+09-27 00:45:18.740 24388 24412 I AttendAI-FacePOC: same_photo_brightness_variant cosine=0.98549140 angle=9.771851 l2=0.17034434 match=true ms=215
+09-27 00:45:19.040 24388 24412 I AttendAI-FacePOC: rotation_90_corrected cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=239
+09-27 00:45:19.325 24388 24412 I AttendAI-FacePOC: rotation_180_corrected cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=232
+09-27 00:45:19.619 24388 24412 I AttendAI-FacePOC: rotation_270_corrected cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=236
+09-27 00:45:19.900 24388 24412 I AttendAI-FacePOC: mirroring_corrected cosine=1.00000000 angle=0.000000 l2=0.00000000 match=true ms=230

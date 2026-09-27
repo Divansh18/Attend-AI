@@ -59,7 +59,7 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
                     error = when (result) {
                         AuthResult.Success -> null
                         AuthResult.InvalidCredentials -> LoginError.INVALID_CREDENTIALS
-                        AuthResult.StaffUnavailable -> LoginError.STAFF_UNAVAILABLE
+                        AuthResult.StorageError -> LoginError.STORAGE_ERROR
                     },
                 )
             }

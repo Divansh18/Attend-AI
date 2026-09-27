@@ -30,7 +30,8 @@
     <string name="username_required">Enter your username or employee ID.</string>
     <string name="password_required">Enter your password.</string>
     <string name="invalid_credentials">Incorrect username or password.</string>
-    <string name="staff_sign_in_unavailable">Staff sign-in will be available after staff setup.</string>
+    <string name="staff_login_hint">Use your employee ID and demo password: staff123</string>
+    <string name="login_storage_error">Could not read staff records. Please retry.</string>
     <string name="admin_staff_list">Admin · Staff list</string>
     <string name="add_staff">Add Staff</string>
     <string name="staff_profile">Staff Profile</string>

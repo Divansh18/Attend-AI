@@ -9,6 +9,8 @@ import com.divanshgandhi.attendai.face.TfliteFaceEmbedder
 import java.util.Locale
 
 class RoomStaffRepository(private val dao: StaffDao) : StaffRepository {
+    suspend fun findByEmployeeId(employeeId: String) = dao.findByEmployeeId(employeeId.trim().uppercase(Locale.ROOT))
+
     override fun observeStaff() = dao.observeAll()
     override fun observeStaff(id: Long) = dao.observeById(id)
 

@@ -1,4 +1,5 @@
 [versions]
+location = "21.4.0"
 room = "2.8.5"
 ksp = "2.3.10"
 agp = "9.4.1"
@@ -18,6 +19,7 @@ kotlin = "2.2.10"
 composeBom = "2026.02.01"
 
 [libraries]
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "location" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }

@@ -56,7 +56,7 @@ class LoginNavigationTest {
         compose.onNodeWithText("Password").performTextInput("admin123")
         compose.onNodeWithText("Sign in").performClick()
 
-        compose.onNodeWithText("Staff sign-in will be available after staff setup.").assertIsDisplayed()
+        compose.onNodeWithText("Incorrect username or password.").assertIsDisplayed()
         compose.onNodeWithText("Admin · Staff list").assertDoesNotExist()
     }
 }

@@ -1,5 +1,7 @@
 package com.divanshgandhi.attendai.ui.admin
 
+import com.divanshgandhi.attendai.data.local.AttendanceEntity
+import com.divanshgandhi.attendai.location.LocationFix
 import com.divanshgandhi.attendai.data.local.StaffEntity
 import com.divanshgandhi.attendai.data.repository.*
 import com.divanshgandhi.attendai.camera.CapturedPhoto
@@ -19,6 +21,11 @@ import org.junit.Assert.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffViewModelsTest {
     private val repository = FakeStaffRepository()
+    private val historyRepository = object : AttendanceRepository {
+        override fun observeHistory(staffId: Long) = flowOf(emptyList<AttendanceEntity>())
+        override fun observeLatest(staffId: Long) = flowOf<AttendanceEntity?>(null)
+        override suspend fun record(staffId: Long, selfieJpeg: ByteArray, location: LocationFix): AttendanceEntity = error("unused")
+    }
     @Before fun setUp() { Dispatchers.setMain(StandardTestDispatcher()) }
     @After fun tearDown() { Dispatchers.resetMain() }
 
@@ -59,7 +66,7 @@ class StaffViewModelsTest {
         assertEquals("Ada", vm.state.value.name)
     }
     @Test fun listAndProfileObserveEnrollmentChanges() = runTest {
-        val list = StaffListViewModel(repository); val profile = StaffProfileViewModel(1, repository)
+        val list = StaffListViewModel(repository); val profile = StaffProfileViewModel(1, repository, historyRepository)
         advanceUntilIdle(); assertTrue(list.state.value.staff.isEmpty()); assertNull(profile.state.value.staff)
         repository.addStaff("Ada", "A1"); advanceUntilIdle()
         assertFalse(profile.state.value.staff!!.isFaceEnrolled)
@@ -70,7 +77,7 @@ class StaffViewModelsTest {
     @Test fun invalidIdShowsMissingWithoutCapture() = runTest {
         val processor = FakeProcessor()
         val vm = FaceEnrollmentViewModel(-1, repository, processor)
-        val profile = StaffProfileViewModel(-1, repository)
+        val profile = StaffProfileViewModel(-1, repository, historyRepository)
         advanceUntilIdle(); vm.enroll { error("Should not capture") }; advanceUntilIdle()
         assertFalse(vm.state.value.loading); assertNull(vm.state.value.staff)
         assertNull(profile.state.value.staff); assertEquals(0, processor.calls)
@@ -111,7 +118,7 @@ class StaffViewModelsTest {
     }
     @Test fun readFailuresExposeRetryAndRecover() = runTest {
         repository.readFailure = true
-        val list = StaffListViewModel(repository); val profile = StaffProfileViewModel(1, repository)
+        val list = StaffListViewModel(repository); val profile = StaffProfileViewModel(1, repository, historyRepository)
         val enroll = FaceEnrollmentViewModel(1, repository, FakeProcessor()); advanceUntilIdle()
         assertNotNull(list.state.value.error); assertNotNull(profile.state.value.error); assertNotNull(enroll.state.value.loadError)
         repository.readFailure = false; list.retry(); profile.retry(); enroll.retry(); advanceUntilIdle()

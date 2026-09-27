@@ -12,4 +12,4 @@ data class LoginUiState(
     val error: LoginError? = null,
 )
 
-enum class LoginError { INVALID_CREDENTIALS, STAFF_UNAVAILABLE }
+enum class LoginError { INVALID_CREDENTIALS, STORAGE_ERROR }

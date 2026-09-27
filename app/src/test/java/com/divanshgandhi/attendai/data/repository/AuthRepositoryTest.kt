@@ -32,7 +32,7 @@ class AuthRepositoryTest {
     @Test
     fun staffCannotSignInWithAdminCredentials() = runTest {
         val repository = AuthRepository()
-        assertEquals(AuthResult.StaffUnavailable, repository.signIn(UserRole.STAFF, "admin", "admin123"))
+        assertEquals(AuthResult.InvalidCredentials, repository.signIn(UserRole.STAFF, "admin", "admin123"))
         assertNull(repository.session.value)
     }
 }

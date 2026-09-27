@@ -13,6 +13,9 @@ interface StaffDao {
     @Query("SELECT * FROM staff WHERE id = :id")
     fun observeById(id: Long): Flow<StaffEntity?>
 
+    @Query("SELECT * FROM staff WHERE employeeId = :employeeId LIMIT 1")
+    suspend fun findByEmployeeId(employeeId: String): StaffEntity?
+
     @Insert
     suspend fun insert(staff: StaffEntity): Long
 

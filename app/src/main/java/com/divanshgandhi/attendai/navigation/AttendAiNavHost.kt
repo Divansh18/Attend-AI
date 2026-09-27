@@ -1,9 +1,10 @@
 package com.divanshgandhi.attendai.navigation
 
+import com.divanshgandhi.attendai.ui.attendance.AttendanceScreen
+import com.divanshgandhi.attendai.ui.attendance.AttendanceViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,13 +19,11 @@ import com.divanshgandhi.attendai.ui.admin.staffprofile.StaffProfileViewModel
 import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListViewModel
 import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentScreen
 import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentViewModel
-import com.divanshgandhi.attendai.R
 import com.divanshgandhi.attendai.BuildConfig
 import com.divanshgandhi.attendai.ui.facepoc.FacePocScreen
 import com.divanshgandhi.attendai.ui.facepoc.FacePocViewModel
 import com.divanshgandhi.attendai.model.UserSession
 import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListScreen
-import com.divanshgandhi.attendai.ui.components.PlaceholderScreen
 import com.divanshgandhi.attendai.ui.login.LoginScreen
 import com.divanshgandhi.attendai.ui.login.LoginViewModel
 
@@ -96,7 +95,7 @@ fun AttendAiNavHost(
                             entry.savedStateHandle["enrollmentSaved"] = false
                             navController.navigate(FaceEnrollment(route.staffId))
                         },
-                        onRetry = vm::retry, onBack = { navController.popBackStack() })
+                        onRetry = vm::retry, onHistoryRetry = vm::retryHistory, onBack = { navController.popBackStack() })
                 }
                 composable<FaceEnrollment> {
                     val vm: FaceEnrollmentViewModel = viewModel(factory = viewModelFactory)
@@ -111,12 +110,9 @@ fun AttendAiNavHost(
                 }
             }
             is UserSession.Staff -> composable<StaffAttendance> {
-                PlaceholderScreen(
-                    title = stringResource(R.string.attendance),
-                    message = stringResource(R.string.feature_coming_soon),
-                    actionLabel = stringResource(R.string.sign_out),
-                    onAction = onSignOut,
-                )
+                val vm: AttendanceViewModel = viewModel(factory = viewModelFactory)
+                val state by vm.state.collectAsStateWithLifecycle()
+                AttendanceScreen(state, vm::markAttendance, vm::retry, vm::startAnother, onSignOut)
             }
         }
     }

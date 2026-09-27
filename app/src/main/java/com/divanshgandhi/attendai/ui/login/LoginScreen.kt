@@ -82,8 +82,8 @@ fun LoginScreen(
                         )
                     }
                 }
-                if (state.role == UserRole.STAFF && state.error != LoginError.STAFF_UNAVAILABLE) {
-                    Text(stringResource(R.string.staff_sign_in_unavailable))
+                if (state.role == UserRole.STAFF) {
+                    Text(stringResource(R.string.staff_login_hint))
                 }
                 OutlinedTextField(
                     value = state.username,
@@ -128,7 +128,7 @@ fun LoginScreen(
                         text = stringResource(
                             when (error) {
                                 LoginError.INVALID_CREDENTIALS -> R.string.invalid_credentials
-                                LoginError.STAFF_UNAVAILABLE -> R.string.staff_sign_in_unavailable
+                                LoginError.STORAGE_ERROR -> R.string.login_storage_error
                             },
                         ),
                         color = MaterialTheme.colorScheme.error,

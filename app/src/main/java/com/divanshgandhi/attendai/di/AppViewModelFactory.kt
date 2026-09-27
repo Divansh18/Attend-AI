@@ -1,5 +1,9 @@
 package com.divanshgandhi.attendai.di
 
+import com.divanshgandhi.attendai.ui.attendance.AttendanceViewModel
+import com.divanshgandhi.attendai.data.repository.AttendanceRepository
+import com.divanshgandhi.attendai.location.LocationProvider
+import com.divanshgandhi.attendai.model.UserSession
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,12 +21,16 @@ import com.divanshgandhi.attendai.ui.admin.staffprofile.StaffProfileViewModel
 import com.divanshgandhi.attendai.ui.facepoc.FacePocViewModel
 import com.divanshgandhi.attendai.ui.login.LoginViewModel
 
-fun appViewModelFactory(authRepository: AuthRepository, staffRepository: StaffRepository, createFaceEngine: () -> FaceRecognitionEngine) = viewModelFactory {
+fun appViewModelFactory(authRepository: AuthRepository, staffRepository: StaffRepository, attendanceRepository: AttendanceRepository, locationProvider: LocationProvider, createFaceEngine: () -> FaceRecognitionEngine) = viewModelFactory {
+    initializer {
+        val staff = checkNotNull(authRepository.session.value as? UserSession.Staff)
+        AttendanceViewModel(staff.staffId, staffRepository, attendanceRepository, createFaceEngine(), locationProvider)
+    }
     initializer { SessionViewModel(authRepository) }
     initializer { LoginViewModel(authRepository) }
     initializer { FacePocViewModel(createFaceEngine()) }
     initializer { StaffListViewModel(staffRepository) }
     initializer { AddStaffViewModel(staffRepository) }
-    initializer { StaffProfileViewModel(createSavedStateHandle().toRoute<StaffProfile>().staffId, staffRepository) }
+    initializer { StaffProfileViewModel(createSavedStateHandle().toRoute<StaffProfile>().staffId, staffRepository, attendanceRepository) }
     initializer { FaceEnrollmentViewModel(createSavedStateHandle().toRoute<FaceEnrollment>().staffId, staffRepository, createFaceEngine()) }
 }

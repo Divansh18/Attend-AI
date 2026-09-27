@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun StaffFormFrame(title: String, onBack: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
     Scaffold { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(Modifier.fillMaxSize().padding(padding).imePadding().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             TextButton(onClick = onBack) { Text("Back") }
             Text(title, style = MaterialTheme.typography.headlineSmall)
             content()

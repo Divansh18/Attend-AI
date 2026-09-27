@@ -98,7 +98,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun changingRoleClearsCredentialsAndStaffLoginRemainsUnavailable() = runTest {
+    fun changingRoleClearsCredentialsAndUnknownStaffIsRejected() = runTest {
         viewModel.onUsernameChange("admin")
         viewModel.onPasswordChange("admin123")
         viewModel.onRoleChange(UserRole.STAFF)
@@ -109,7 +109,7 @@ class LoginViewModelTest {
         viewModel.signIn()
         advanceUntilIdle()
 
-        assertEquals(LoginError.STAFF_UNAVAILABLE, viewModel.uiState.value.error)
+        assertEquals(LoginError.INVALID_CREDENTIALS, viewModel.uiState.value.error)
         assertNull(repository.session.value)
     }
 

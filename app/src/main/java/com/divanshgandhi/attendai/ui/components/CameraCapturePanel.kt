@@ -74,7 +74,11 @@ fun CameraCapturePanel(actions: @Composable (ready: Boolean, takePhoto: suspend 
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                cameraError = e.message ?: "Camera could not start."
+                cameraError = if (e.message == "This device has no front camera.") {
+                    e.message
+                } else {
+                    "Camera could not start. Please retry."
+                }
             }
         }
         AndroidView(factory = { preview }, modifier = Modifier.fillMaxWidth().height(220.dp))

@@ -165,7 +165,7 @@ Final automated verification completed successfully on the Pixel 7 emulator:
 - `:app:assembleDebug`: passed
 - `:app:testDebugUnitTest`: 50 tests passed, 0 failed, 0 skipped
 - `:app:connectedDebugAndroidTest`: 25 tests passed, 0 failed, 0 skipped
-- `:app:lintDebug`: passed with 0 errors and 24 warnings
+- `:app:lintDebug`: passed with 0 errors and 23 warnings
 - `git diff --check`: passed
 
 The remaining lint warnings are dependency/tool update notices, a redundant activity label, and unused template resources; dependencies were intentionally not upgraded for the assignment.

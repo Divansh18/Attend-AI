@@ -54,7 +54,7 @@ class CameraCapture(private val context: Context) : AutoCloseable {
     }
 
     suspend fun takePhoto(): CapturedPhoto = withContext(Dispatchers.Main.immediate) {
-        check(!closed && provider != null) { "Camera is not ready. Reopen the proof of concept." }
+        check(!closed && provider != null) { "Camera is not ready. Reopen this screen and retry." }
         capture.targetRotation = previewView?.display?.rotation ?: Surface.ROTATION_0
         suspendCancellableCoroutine { continuation ->
             capture.takePicture(worker, object : ImageCapture.OnImageCapturedCallback() {

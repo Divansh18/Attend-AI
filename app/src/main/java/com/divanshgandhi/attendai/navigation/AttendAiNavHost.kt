@@ -19,9 +19,6 @@ import com.divanshgandhi.attendai.ui.admin.staffprofile.StaffProfileViewModel
 import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListViewModel
 import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentScreen
 import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentViewModel
-import com.divanshgandhi.attendai.BuildConfig
-import com.divanshgandhi.attendai.ui.facepoc.FacePocScreen
-import com.divanshgandhi.attendai.ui.facepoc.FacePocViewModel
 import com.divanshgandhi.attendai.model.UserSession
 import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListScreen
 import com.divanshgandhi.attendai.ui.login.LoginScreen
@@ -60,19 +57,7 @@ fun AttendAiNavHost(
                     val state by vm.state.collectAsStateWithLifecycle()
                     StaffListScreen(state, onAdd = { navController.navigate(AddStaff) },
                         onStaff = { navController.navigate(StaffProfile(it)) }, onRetry = vm::retry,
-                        onSignOut = onSignOut, onFacePoc = { navController.navigate(FaceProofOfConcept) })
-                }
-                if (BuildConfig.DEBUG) {
-                    composable<FaceProofOfConcept> {
-                        val faceViewModel: FacePocViewModel = viewModel(factory = viewModelFactory)
-                        val state by faceViewModel.state.collectAsStateWithLifecycle()
-                        FacePocScreen(
-                            state = state,
-                            onCapture = faceViewModel::capture,
-                            onReset = faceViewModel::reset,
-                            onBack = { navController.popBackStack() },
-                        )
-                    }
+                        onSignOut = onSignOut)
                 }
                 composable<AddStaff> {
                     val vm: AddStaffViewModel = viewModel(factory = viewModelFactory)

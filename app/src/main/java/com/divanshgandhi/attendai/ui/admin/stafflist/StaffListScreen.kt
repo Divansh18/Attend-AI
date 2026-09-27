@@ -9,20 +9,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.divanshgandhi.attendai.BuildConfig
 
 @Composable
-fun StaffListScreen(state: StaffListUiState, onAdd: () -> Unit, onStaff: (Long) -> Unit, onRetry: () -> Unit, onSignOut: () -> Unit, onFacePoc: () -> Unit) {
+fun StaffListScreen(state: StaffListUiState, onAdd: () -> Unit, onStaff: (Long) -> Unit, onRetry: () -> Unit, onSignOut: () -> Unit) {
     Scaffold { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.admin_staff_list), style = MaterialTheme.typography.headlineSmall)
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Button(onClick = onAdd) { Text(stringResource(R.string.add_staff)) }
                 TextButton(onClick = onSignOut) { Text("Sign out") }
-            }
-            if (BuildConfig.DEBUG) {
-                Text("Debug tools", style = MaterialTheme.typography.labelSmall)
-                OutlinedButton(onClick = onFacePoc) { Text("Face recognition · Debug POC") }
             }
             when {
                 state.loading -> CircularProgressIndicator()

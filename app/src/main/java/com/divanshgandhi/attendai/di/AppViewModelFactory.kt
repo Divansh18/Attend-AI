@@ -18,7 +18,6 @@ import com.divanshgandhi.attendai.ui.admin.addstaff.AddStaffViewModel
 import com.divanshgandhi.attendai.ui.admin.enrollment.FaceEnrollmentViewModel
 import com.divanshgandhi.attendai.ui.admin.stafflist.StaffListViewModel
 import com.divanshgandhi.attendai.ui.admin.staffprofile.StaffProfileViewModel
-import com.divanshgandhi.attendai.ui.facepoc.FacePocViewModel
 import com.divanshgandhi.attendai.ui.login.LoginViewModel
 
 fun appViewModelFactory(authRepository: AuthRepository, staffRepository: StaffRepository, attendanceRepository: AttendanceRepository, locationProvider: LocationProvider, createFaceEngine: () -> FaceRecognitionEngine) = viewModelFactory {
@@ -28,7 +27,6 @@ fun appViewModelFactory(authRepository: AuthRepository, staffRepository: StaffRe
     }
     initializer { SessionViewModel(authRepository) }
     initializer { LoginViewModel(authRepository) }
-    initializer { FacePocViewModel(createFaceEngine()) }
     initializer { StaffListViewModel(staffRepository) }
     initializer { AddStaffViewModel(staffRepository) }
     initializer { StaffProfileViewModel(createSavedStateHandle().toRoute<StaffProfile>().staffId, staffRepository, attendanceRepository) }

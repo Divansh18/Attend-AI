@@ -17,7 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Works with synthetic or webcam front-camera input; fixtures test exact detection outcomes. */
+/** Uses the production enrollment screen with either synthetic or webcam front-camera input. */
 @RunWith(AndroidJUnit4::class)
 class FaceCameraSmokeTest {
     @get:Rule
@@ -32,20 +32,37 @@ class FaceCameraSmokeTest {
         compose.onNodeWithText("Username").performTextInput("admin")
         compose.onNodeWithText("Password").performTextInput("admin123")
         compose.onNodeWithText("Sign in").performClick()
-        compose.onNodeWithText("Face recognition · Debug POC").performClick()
-        compose.waitUntil(20_000) {
-            compose.onAllNodes(hasText("Capture reference") and isEnabled()).fetchSemanticsNodes().isNotEmpty()
-        }
+        waitForText("Add Staff")
+        compose.onNodeWithText("Add Staff").performClick()
+        compose.onNodeWithText("Name").performTextInput("Camera Smoke Test")
+        compose.onNodeWithText("Employee ID").performTextInput("CAM-${System.currentTimeMillis()}")
+        compose.onNodeWithText("Save Staff").performClick()
+        waitForText("Staff Profile")
+        compose.onNodeWithText("Enroll Face").performClick()
+
         repeat(2) {
-            compose.onNodeWithText("Capture reference").performScrollTo().performClick()
+            waitForEnabledCapture()
+            compose.onNodeWithText("Capture and enroll").performScrollTo().performClick()
+            compose.waitUntil(5_000) { !enabledCaptureExists() }
             compose.waitUntil(30_000) {
-                val ready = compose.onAllNodes(hasText("Capture reference") and isEnabled()).fetchSemanticsNodes().isNotEmpty()
-                val success = compose.onAllNodesWithText("Reference embedding is held in memory.").fetchSemanticsNodes().isNotEmpty()
-                val detectionError = listOf("No face detected.", "Multiple faces detected.", "Move closer", "Eyes, nose", "Keep the whole face").any {
-                    compose.onAllNodesWithText(it, substring = true).fetchSemanticsNodes().isNotEmpty()
-                }
-                ready && (success || detectionError)
+                enabledCaptureExists() ||
+                    compose.onAllNodesWithText("Face enrollment saved successfully.").fetchSemanticsNodes().isNotEmpty()
+            }
+            if (it == 0 && !enabledCaptureExists()) {
+                compose.onNodeWithText("Re-enroll Face").performClick()
             }
         }
+        compose.runOnIdle { (compose.activity.application as AttendAiApplication).container.authRepository.signOut() }
     }
+
+    private fun waitForText(text: String) {
+        compose.waitUntil(10_000) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
+    }
+
+    private fun waitForEnabledCapture() {
+        compose.waitUntil(20_000) { enabledCaptureExists() }
+    }
+
+    private fun enabledCaptureExists() =
+        compose.onAllNodes(hasText("Capture and enroll") and isEnabled()).fetchSemanticsNodes().isNotEmpty()
 }
